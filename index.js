@@ -8,6 +8,14 @@ import { JSDOM } from 'jsdom';
 
 const url = 'https://memegen-link-examples-upleveled.netlify.app';
 
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
 https
   // Fetches html from url
   .get(url, (res) => {
@@ -28,7 +36,9 @@ https
       const imgElements = [...document.querySelectorAll('img')];
       const imgSources = imgElements.map((img) => img.src);
 
-      console.log(imgSources); // Prints all img sources
+      const randomImgSources = shuffleArray(imgSources).slice(0, 10);
+
+      console.log(randomImgSources); // Prints all img sources
 
       // console.log(data); // Outputs fetched data (html)
     });
