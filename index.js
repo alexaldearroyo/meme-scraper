@@ -1,10 +1,5 @@
-// scrap https://memegen-link-examples-upleveled.netlify.app
-
-// - connect to https://memegen-link-examples-upleveled.netlify.app
-// -- fetch the html
-
-import https from 'node:https';
 import { JSDOM } from 'jsdom';
+import fetch from 'node-fetch';
 
 const url = 'https://memegen-link-examples-upleveled.netlify.app';
 
@@ -16,33 +11,26 @@ function shuffleArray(array) {
   return array;
 }
 
-https
-  // Fetches html from url
-  .get(url, (res) => {
-    let data = '';
+async function fetchImages() {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status.toString()}`);
+    }
 
-    // Gets data in parts
-    res.on('data', (chunk) => {
-      data += chunk;
-    });
+    const html = await response.text();
+    const dom = new JSDOM(html);
+    const document = dom.window.document;
 
-    // Processes data once response is finished
-    res.on('end', () => {
-      // Parses data into a DOM
-      const dom = new JSDOM(data);
-      const document = dom.window.document;
+    const imgElements = [...document.querySelectorAll('img')];
+    const imgSources = imgElements.map((img) => img.src);
 
-      // Selects all img elements
-      const imgElements = [...document.querySelectorAll('img')];
-      const imgSources = imgElements.map((img) => img.src);
+    const randomImgSources = shuffleArray(imgSources).slice(0, 10);
 
-      const randomImgSources = shuffleArray(imgSources).slice(0, 10);
+    console.log(randomImgSources);
+  } catch (error) {
+    console.error('Error:', error.message);
+  }
+}
 
-      console.log(randomImgSources); // Prints all img sources
-
-      // console.log(data); // Outputs fetched data (html)
-    });
-  })
-  .on('error', (err) => {
-    console.error('Error:', err.message);
-  });
+fetchImages();
