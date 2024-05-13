@@ -6,6 +6,11 @@ import fetch from 'node-fetch';
 const url = 'https://memegen-link-examples-upleveled.netlify.app';
 const outputFolder = path.join(process.cwd(), 'memes');
 
+// Ensure the output folder exists
+if (!fs.existsSync(outputFolder)) {
+  fs.mkdirSync(outputFolder, { recursive: true });
+}
+
 // Downloads a single image
 const downloadImage = async (imageUrl, filepath) => {
   const response = await fetch(imageUrl);
