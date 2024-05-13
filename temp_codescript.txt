@@ -1,3 +1,5 @@
+// index.js:
+
 import fs from 'node:fs';
 import path from 'node:path';
 import { JSDOM } from 'jsdom';
@@ -59,3 +61,70 @@ await fetchImages().catch((error) => {
   console.error('Error:', error.message);
 });
 export { default } from 'eslint-config-upleveled';
+
+----------------------------------------
+
+// package.json:
+
+{
+  "name": "meme-scraper",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+  },
+  "devDependencies": {
+    "@types/eslint": "^8.56.10",
+    "@types/jsdom": "^21.1.6",
+    "@types/node": "^20.12.11",
+    "eslint-config-upleveled": "^8.1.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@typescript-eslint/parser": "^7.8.0",
+    "jsdom": "^24.0.0",
+    "node-fetch": "^3.3.2"
+  }
+}
+
+----------------------------------------
+
+// prettier.config.js:
+
+/** @type {import('prettier').Config} */
+const config = {
+  singleQuote: true,
+  trailingComma: 'all',
+};
+
+export default config;
+
+----------------------------------------
+
+// tsconfig.json:
+
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "eslint-config-upleveled/tsconfig.base.json",
+  "compilerOptions": {
+    "module": "NodeNext"
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx",
+    "**/*.cjs",
+    "**/*.mjs"
+  ]
+}
+
+----------------------------------------
+
