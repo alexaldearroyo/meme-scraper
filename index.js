@@ -13,8 +13,12 @@ const downloadImage = async (imageUrl, filepath) => {
     throw new Error(`Failed to fetch image: ${response.statusText}`);
   }
 
-  const buffer = await response.buffer();
-  fs.writeFileSync(filepath, buffer);
+  const fileStream = fs.createWriteStream(filepath);
+  response.body.pipe(fileStream);
+  await new Promise((resolve, reject) => {
+    response.body.on('end', resolve);
+    response.body.on('error', reject);
+  });
 };
 
 // Fetches html from url and downloads images
@@ -26,24 +30,16 @@ const fetchImages = async () => {
     }
 
     const html = await response.text();
-
-    // Parses data into a DOM
     const dom = new JSDOM(html);
     const document = dom.window.document;
 
-    // Selects all img elements
-    const imgElements = [...document.querySelectorAll('img')];
-    const imgSources = imgElements.map((img) => img.src);
+    const imgElements = Array.from(document.getElementsByTagName('img'));
+    const limitedImgSources = imgElements.map((img) => img.src).slice(0, 10);
 
-    // Limits the number of image sources to 10
-    const limitedImgSources = imgSources.slice(0, 10);
-
-    // Prints all image sources
     console.log(limitedImgSources);
 
-    // Downloads images
     for (const [index, src] of limitedImgSources.entries()) {
-      const imageUrl = src.startsWith('http') ? src : `${url}${String(src)}`;
+      const imageUrl = src.startsWith('http') ? src : `${url}${src}`;
       const imageFile = path.join(outputFolder, `meme${index + 1}.jpg`);
       console.log(`Downloading: ${imageUrl} -> ${imageFile}`);
       await downloadImage(imageUrl, imageFile);
@@ -58,4 +54,3 @@ const fetchImages = async () => {
 await fetchImages().catch((error) => {
   console.error('Error:', error.message);
 });
-export { default } from 'eslint-config-upleveled';
