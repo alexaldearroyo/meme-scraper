@@ -47,7 +47,7 @@ const fetchImages = async () => {
       const imageUrl = src.startsWith('http') ? src : `${url}${src}`;
       const imageFile = path.join(
         outputFolder,
-        `meme${(index + 1).toString().padStart(2, '0')}.jpg`,
+        `(index + 1).toString().padStart(2, '0').jpg`,
       );
       console.log(`Downloading: ${imageUrl} -> ${imageFile}`);
       await downloadImage(imageUrl, imageFile);
