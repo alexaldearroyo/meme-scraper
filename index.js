@@ -41,8 +41,6 @@ const fetchImages = async () => {
     const imgElements = Array.from(document.getElementsByTagName('img'));
     const limitedImgSources = imgElements.map((img) => img.src).slice(0, 10);
 
-    console.log(limitedImgSources);
-
     for (const [index, src] of limitedImgSources.entries()) {
       const imageUrl = src.startsWith('http') ? src : `${url}${src}`;
       const imageFile = path.join(
